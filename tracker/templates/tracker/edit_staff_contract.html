@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header with Consistent Styling -->
+        <div class="card-header text-white" style="background-color: #460225;">Edit Staff Contract</div>
+
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ✅ Auto-populated Employee Name (Read-only) -->
+                <div class="mb-3">
+                    <label class="form-label">Employee</label>
+                    <input type="text" class="form-control" value="{{ contract.employee.user.username }}" readonly>
+                </div>
+
+                <!-- ✅ Position Field (Ensure it is retained on update) -->
+                <div class="mb-3">
+                    <label class="form-label">Position</label>
+                    <input type="text" name="position" class="form-control" value="{{ contract.employee.position }}" required>
+                </div>
+
+                <!-- ✅ Start Date & End Date in a Row -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" name="start_date" class="form-control" value="{{ contract.start_date|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" name="end_date" class="form-control" value="{{ contract.end_date|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ Contract File Upload -->
+                <div class="mb-3">
+                    <label class="form-label">Contract File</label>
+                    <input type="file" name="contract_file" class="form-control">
+                    {% if contract.contract_file %}
+                        <p class="mt-2">Current File: <a href="{{ contract.contract_file.url }}" target="_blank" class="btn btn-primary btn-sm">
+                            <i class="fa fa-download"></i> Download
+                        </a></p>
+                    {% endif %}
+                </div>
+
+                <!-- ✅ Action Buttons -->
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-save"></i> Update Contract
+                    </button>
+                    <a href="{% url 'staff_contracts' %}" class="btn btn-secondary">
+                        <i class="fa fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Custom Styling -->
+<style>
+    .card {
+        background-color: white; /* White background */
+        border-radius: 15px; /* Curved edges */
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        font-weight: bold;
+        background-color: #460225 !important; /* Consistent dark purple header */
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .btn {
+        font-size: 1rem;
+    }
+
+    .btn-success, .btn-secondary {
+        border-radius: 8px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+    }
+</style>
+
+{% endblock %}

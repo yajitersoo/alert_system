@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header with Consistent Styling -->
+        <div class="card-header text-white" style="background-color: #460225;">Admin Dashboard</div>
+
+        <div class="card-body">
+            <div class="row">
+                <!-- ✅ Contract Statistics -->
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-header">Total Issued Contracts</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ total_contracts }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-header">Active Contracts</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ active_contracts }} / {{ total_contracts }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-header">Expired Contracts</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ expired_contracts }} / {{ total_contracts }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- ✅ Leave Statistics -->
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-header">Total Leave Requests</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ total_leaves }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-header">Approved Leaves</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ approved_leaves }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-header">Rejected Leaves</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ rejected_leaves }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ✅ Pending Leave Requests -->
+            <div class="card mt-4">
+                <div class="card-header text-black" style="background-color: #ffffff;">Pending Leave Requests</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for leave in pending_leaves %}
+                        <li class="list-group-item">
+                            {{ leave.employee.username }} - {{ leave.start_date }} to {{ leave.end_date }}
+                            <a href="{% url 'approve_leave' leave.id %}" class="btn btn-success btn-sm float-end">Approve</a>
+                            <a href="{% url 'reject_leave' leave.id %}" class="btn btn-danger btn-sm float-end me-2">Reject</a>
+                        </li>
+                        {% empty %}
+                        <p class="text-muted text-center">No pending leave requests.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ✅ Expiring Contracts -->
+            <div class="card mt-4">
+                <div class="card-header text-black" style="background-color: #ffffff;">Expiring Staff Contracts (7 Days Left)</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for contract in expiring_contracts %}
+                        <li class="list-group-item">{{ contract.employee.user.username }} - Expiring on {{ contract.end_date }}</li>
+                        {% empty %}
+                        <p class="text-muted text-center">No expiring contracts within the next 7 days.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ✅ Expired Contracts -->
+            <div class="card mt-4">
+                <div class="card-header text-black" style="background-color: #ffffff;">Expired Contracts</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for contract in expired_contracts_list %}
+                        <li class="list-group-item">{{ contract.employee.user.username }} - Expired on {{ contract.end_date }}</li>
+                        {% empty %}
+                        <p class="text-muted text-center">No expired contracts.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ✅ Expiring Supplier Contracts -->
+            <div class="card mt-4">
+                <div class="card-header text-black" style="background-color: #ffffff;">Expiring Supplier Contracts (7 Days Left)</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for contract in expiring_supplier_contracts %}
+                        <li class="list-group-item">{{ contract.supplier_name }} - Expiring on {{ contract.end_date }}</li>
+                        {% empty %}
+                        <p class="text-muted text-center">No expiring supplier contracts.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ✅ Expired Supplier Contracts -->
+            <div class="card mt-4">
+                <div class="card-header text-black" style="background-color: #ffffff;">Expired Supplier Contracts</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for contract in expired_supplier_contracts %}
+                        <li class="list-group-item">{{ contract.supplier_name }} - Expired on {{ contract.end_date }}</li>
+                        {% empty %}
+                        <p class="text-muted text-center">No expired supplier contracts.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Custom Styling -->
+<style>
+    .card {
+        background-color: white; /* White background */
+        border-radius: 10px; /* Curved edges */
+        overflow: hidden; /* Ensures content stays inside */
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        font-weight: bold;
+
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .list-group-item {
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+    }
+
+    .text-muted {
+        font-size: 1rem;
+    }
+</style>
+
+{% endblock %}

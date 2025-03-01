@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header with Consistent Styling -->
+        <div class="card-header text-white" style="background-color: #460225;">Request Leave</div>
+
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- ✅ Render Form Fields with Bootstrap Styling -->
+                <div class="mb-3">
+                    {{ form.start_date.label_tag }}
+                    {{ form.start_date }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.end_date.label_tag }}
+                    {{ form.end_date }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.leave_type.label_tag }}
+                    {{ form.leave_type }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.reason.label_tag }}
+                    {{ form.reason }}
+                </div>
+
+                <!-- ✅ Action Buttons -->
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-paper-plane"></i> Submit Request
+                    </button>
+                    <a href="{% url 'staff_leaves' %}" class="btn btn-secondary">
+                        <i class="fa fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Custom Styling -->
+<style>
+    .card {
+        background-color: white; /* White background */
+        border-radius: 15px; /* Curved edges */
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        font-weight: bold;
+        background-color: #460225 !important; /* Consistent dark purple header */
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .btn {
+        font-size: 1rem;
+    }
+
+    .btn-success, .btn-secondary {
+        border-radius: 8px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+    }
+
+    form p {
+        margin-bottom: 15px; /* Spacing between form fields */
+    }
+
+    form input, form select, form textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+</style>
+
+{% endblock %}

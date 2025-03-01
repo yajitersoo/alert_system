@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Staff Tracker{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        /* ✅ Updated Navbar */
+        .navbar {
+            background-color: #6b154f !important; /* Custom navbar color */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ✅ Set Base Background Color */
+        body {
+            background-color: #f5f4f1 !important;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ✅ Ensure Main Content Has Padding */
+        .main-content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        /* ✅ Logo Styling */
+        .navbar-brand img {
+            height: 40px; /* Adjust logo size */
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ✅ Navbar with Logo -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <img src="{% static 'image/logo.png' %}" alt="Logo">
+            <span class="fw-bold text-white">Staff Tracker</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'employee_profile' user.id %}">
+                            <i class="fa fa-user"></i> {{ user.username }}
+                        </a>
+                    </li>
+
+                    {% if user.is_staff %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fa fa-chart-line"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'employee_list' %}"><i class="fa fa-users"></i> Employees</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'staff_leaves' %}"><i class="fa fa-calendar-alt"></i> Leave Requests</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'staff_contracts' %}"><i class="fa fa-file-contract"></i> Contracts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'supplier_contracts' %}"><i class="fa fa-handshake"></i> Suppliers</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'request_leave' %}"><i class="fa fa-calendar-plus"></i> Request Leave</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'staff_leaves' %}"><i class="fa fa-clock"></i> My Leaves</a></li>
+                        {% if user.employeeprofile.employee_type == "Expatriate Staff" %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'expat_documents' %}"><i class="fa fa-id-card"></i> My Documents</a></li>
+                        {% endif %}
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-danger btn-sm text-white border-0">
+                                <i class="fa fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary btn-sm text-white" href="{% url 'login' %}">
+                            <i class="fa fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- ✅ Main Content Area -->
+<div class="container main-content">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

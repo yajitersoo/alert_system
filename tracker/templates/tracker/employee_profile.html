@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header with Consistent Styling -->
+        <div class="card-header text-white" style="background-color: #460225;">Employee Profile</div>
+
+        <div class="row p-4">
+            <!-- ✅ Profile Picture -->
+            <div class="col-md-4 text-center">
+                {% if employee.profile_picture %}
+                    <img src="{{ employee.profile_picture.url }}" alt="Profile Picture"
+                        class="img-fluid" style="width: 100%; height: auto; max-height: 400px; object-fit: cover; border-radius: 10px;">
+                {% else %}
+                    <img src="/media/profile_pictures/default.jpg" alt="Default Profile"
+                        class="img-fluid" style="width: 100%; height: auto; max-height: 300px; object-fit: cover; border-radius: 10px;">
+                {% endif %}
+            </div>
+
+            <!-- ✅ Employee Details -->
+            <div class="col-md-8">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Full Name:</strong> {{ employee.user.get_full_name }}</li>
+                    <li class="list-group-item"><strong>Username:</strong> {{ employee.user.username }}</li>
+                    <li class="list-group-item"><strong>Position:</strong> {{ employee.position }}</li>
+                    <li class="list-group-item"><strong>Department:</strong> {{ employee.department }}</li>
+                    <li class="list-group-item"><strong>Email:</strong> {{ employee.user.email }}</li>
+                    <li class="list-group-item"><strong>Phone Number:</strong> {{ employee.phone_number }}</li>
+                    <li class="list-group-item"><strong>Employee Type:</strong> {{ employee.employee_type }}</li>
+                    <li class="list-group-item"><strong>Start Date:</strong> {{ contract.start_date|date:"d M Y" }}</li>
+                    <li class="list-group-item"><strong>End Date:</strong> {{ contract.end_date|date:"d M Y" }}</li>
+                    <li class="list-group-item"><strong>Status:</strong>
+                        {% if contract.end_date < today %}
+                            <span class="badge bg-danger">Expired</span>
+                        {% elif contract.is_expiring_soon %}
+                            <span class="badge bg-warning text-dark">Expiring Soon</span>
+                        {% else %}
+                            <span class="badge bg-success">Active</span>
+                        {% endif %}
+                    </li>
+                    {% if contract.contract_file %}
+                    <li class="list-group-item">
+                        <strong>Contract File:</strong>
+                        <a href="{{ contract.contract_file.url }}" class="btn btn-primary btn-sm" download>
+                            <i class="fa fa-download"></i> Download
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- ✅ Admin Actions -->
+                {% if user.is_staff %}
+                <div class="mt-3">
+                    <a href="{% url 'edit_employee' employee.user.id %}" class="btn btn-warning">
+                        <i class="fa fa-edit"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'delete_employee' employee.user.id %}" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Delete Employee
+                    </a>
+                    <a href="{% url 'employee_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+    {% endif %}
+</div>
+
+<!-- ✅ Custom Styling -->
+<style>
+    .card {
+        background-color: white; /* White background */
+        border-radius: 15px; /* Curved edges */
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        font-weight: bold;
+        background-color: #460225 !important; /* Consistent dark purple header */
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    .btn-warning, .btn-primary, .btn-danger {
+        border-radius: 5px;
+    }
+
+    .badge {
+        font-size: 1rem;
+        padding: 5px 10px;
+    }
+</style>
+
+{% endblock %}

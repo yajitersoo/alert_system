@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header -->
+        <div class="card-header text-white" style="background-color: #460225;">Add New Staff Contract</div>
+
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ✅ Select Existing Employee -->
+                <div class="mb-3">
+                    <label for="id_employee" class="form-label">Select Existing Employee</label>
+                    <select name="employee" id="id_employee" class="form-select" onchange="populateEmployeeDetails()">
+                        <option value="">-- Select Employee --</option>
+                        {% for employee in form.fields.employee.queryset %}
+                            <option value="{{ employee.id }}" {% if employee == selected_employee %}selected{% endif %}>
+                                {{ employee.user.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- ✅ If New Employee, Show Input Fields -->
+                <div id="new_employee_fields">
+                    <div class="mb-3">
+                        <label for="id_new_username" class="form-label">New Employee Username</label>
+                        <input type="text" name="new_username" class="form-control" placeholder="Enter username">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Enter email">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter password">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_confirm_password" class="form-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" class="form-control" placeholder="Confirm password">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_employee_type" class="form-label">Employee Type</label>
+                        <select name="employee_type" class="form-select">
+                            <option value="National Staff">National Staff</option>
+                            <option value="Expatriate Staff">Expatriate Staff</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_position" class="form-label">Position</label>
+                        <input type="text" name="position" class="form-control" placeholder="Enter position">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_department" class="form-label">Department</label>
+                        <input type="text" name="department" class="form-control" placeholder="Enter department">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_phone_number" class="form-label">Phone Number</label>
+                        <input type="text" name="phone_number" class="form-control" placeholder="Enter phone number">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_hire_date" class="form-label">Hire Date</label>
+                        <input type="date" name="hire_date" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_profile_picture" class="form-label">Profile Picture</label>
+                        <input type="file" name="profile_picture" class="form-control">
+                    </div>
+                </div>
+
+                <!-- ✅ Contract Fields -->
+                <div class="mb-3">
+                    <label for="id_start_date" class="form-label">Start Date</label>
+                    <input type="date" name="start_date" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_end_date" class="form-label">End Date</label>
+                    <input type="date" name="end_date" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_contract_file" class="form-label">Upload Contract File</label>
+                    <input type="file" name="contract_file" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="fa fa-save"></i> Save Contract
+                </button>
+
+                <a href="{% url 'staff_contracts' %}" class="btn btn-danger w-100 mt-2">
+                    <i class="fa fa-times"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ JavaScript to Toggle Fields Based on Employee Selection -->
+<script>
+    function populateEmployeeDetails() {
+        var employeeDropdown = document.getElementById("id_employee");
+        var newEmployeeFields = document.getElementById("new_employee_fields");
+
+        if (employeeDropdown.value) {
+            newEmployeeFields.style.display = "none"; // Hide fields if existing employee selected
+        } else {
+            newEmployeeFields.style.display = "block"; // Show fields if adding new employee
+        }
+    }
+</script>
+
+{% endblock %}

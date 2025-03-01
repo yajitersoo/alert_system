@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header with Consistent Styling -->
+        <div class="card-header text-white" style="background-color: #460225;">Leave Requests</div>
+
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        {% if user.is_staff %}
+                        <th style="width: 200px;" class="text-center">Actions</th> {# ✅ Fixed width ensures full coverage #}
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leaves %}
+                    <tr>
+                        <td>{{ leave.employee.username }}</td>
+                        <td>{{ leave.start_date }}</td>
+                        <td>{{ leave.end_date }}</td>
+                        <td>
+                            {% if leave.status == "Pending" %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif leave.status == "Approved" %}
+                                <span class="badge bg-success">Approved</span>
+                            {% elif leave.status == "Rejected" %}
+                                <span class="badge bg-danger">Rejected</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Unknown</span>
+                            {% endif %}
+                        </td>
+                        {% if user.is_staff %}
+                        <td class="text-center">
+                            {% if leave.status == "Pending" %}
+                                <a href="{% url 'approve_leave' leave.id %}" class="btn btn-success btn-sm">Approve</a>
+                                <a href="{% url 'reject_leave' leave.id %}" class="btn btn-danger btn-sm">Reject</a>
+                            {% else %}
+                                <span class="text-muted">Processed</span> {# ✅ Keeps column filled for non-pending leaves #}
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="{% if user.is_staff %}5{% else %}4{% endif %}" class="text-center text-muted">
+                            No leave requests found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Custom Styling -->
+<style>
+    .card {
+        background-color: white; /* White background */
+        border-radius: 15px; /* Curved edges */
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        font-weight: bold;
+        background-color: #460225 !important; /* Consistent dark purple header */
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+.carousel-item img {
+    width: 500px;
+    height: auto; /* Set a fixed height */
+    object-fit: cover; /* Ensures full coverage without distortion */
+}
+
+.carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%; /* Make navigation buttons smaller */
+}

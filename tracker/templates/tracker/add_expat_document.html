@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Add Expatriate Document</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- 🔹 Show employee selection for admin only -->
+        {% if user.is_staff %}
+            <div class="mb-3">
+                <label for="id_employee">Employee</label>
+                <select name="employee" class="form-control">
+                    {% for employee in employees %}
+                        <option value="{{ employee.id }}">{{ employee.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Upload Document</button>
+    </form>
+</div>
+{% endblock %}

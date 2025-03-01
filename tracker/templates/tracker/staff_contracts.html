@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded border-0">
+
+        <!-- ✅ Header with Consistent Styling -->
+        <div class="card-header text-white" style="background-color: #460225;">Staff Contracts</div>
+
+        <div class="card-body">
+            <!-- ✅ "Add New Contract" Button for Admins -->
+            {% if user.is_staff %}
+                <a href="{% url 'add_staff_contract' %}" class="btn btn-success mb-3">
+                    <i class="fa fa-plus"></i> Add New Contract
+                </a>
+            {% endif %}
+
+            {% if contracts %}
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Position</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Contract File</th>
+                        <th style="width: 220px;" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contract in contracts %}
+                    <tr>
+                        <td>{{ contract.employee.user.username }}</td>
+                        <td>{{ contract.employee.position }}</td>
+                        <td>{{ contract.start_date|date:"d M Y" }}</td>
+                        <td>{{ contract.end_date|date:"d M Y" }}</td>
+                        <td class="text-center">
+                            {% if contract.contract_file %}
+                                <a href="{{ contract.contract_file.url }}" class="btn btn-primary btn-sm" download>
+                                    <i class="fa fa-download"></i> Download
+                                </a>
+                            {% else %}
+                                <span class="text-muted">No File</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'edit_staff_contract' contract.id %}" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_staff_contract' contract.id %}" class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-center text-muted">⚠ No contracts found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Custom Styling -->
+<style>
+    .card {
+        background-color: white; /* White background */
+        border-radius: 15px; /* Curved edges */
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        font-weight: bold;
+        background-color: #460225 !important; /* Consistent dark purple header */
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    .btn-success {
+        border-radius: 8px;
+    }
+
+    .btn-warning, .btn-danger, .btn-primary {
+        border-radius: 5px;
+    }
+
+    .text-muted {
+        font-size: 1rem;
+    }
+</style>
+
+{% endblock %}
